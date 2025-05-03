@@ -1,0 +1,11 @@
+@import "tailwindcss";
+/* styles.css */
+
+/* styles.css */
+.bg-custom {
+  background-color: #141E2C;
+}
+
+.bg-form{
+  background-color: #29292D;
+}
