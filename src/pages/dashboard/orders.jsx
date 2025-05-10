@@ -11,27 +11,27 @@ export default function Orders() {
 
           <CardCompany
           title={"company"}
-          image={"https://inkscape.app/wp-content/uploads/imagen-vectorial.webp"}
+          image={"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxFvoRX4Y_mAxPaWqaHP5XBrWmjd47UfiM0A&s"}
           />
           <CardCompany
           title={"company"}
-          image={"https://inkscape.app/wp-content/uploads/imagen-vectorial.webp"}
+          image={"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxFvoRX4Y_mAxPaWqaHP5XBrWmjd47UfiM0A&s"}
           />
           <CardCompany
           title={"company"}
-          image={"https://inkscape.app/wp-content/uploads/imagen-vectorial.webp"}
+          image={"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxFvoRX4Y_mAxPaWqaHP5XBrWmjd47UfiM0A&s"}
           />
           <CardCompany
           title={"company"}
-          image={"https://inkscape.app/wp-content/uploads/imagen-vectorial.webp"}
+          image={"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxFvoRX4Y_mAxPaWqaHP5XBrWmjd47UfiM0A&s"}
           />
           <CardCompany
           title={"company"}
-          image={"https://inkscape.app/wp-content/uploads/imagen-vectorial.webp"}
+          image={"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxFvoRX4Y_mAxPaWqaHP5XBrWmjd47UfiM0A&s"}
           />
           <CardCompany
           title={"company"}
-          image={"https://inkscape.app/wp-content/uploads/imagen-vectorial.webp"}
+          image={"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxFvoRX4Y_mAxPaWqaHP5XBrWmjd47UfiM0A&s"}
           />
         </div>
         <div>

@@ -10,6 +10,7 @@ import FormCreateProduct from "./components/products/FormCreateProduct";
 import FormCategory from "./components/category/FormCategory";
 import FormAtm from "./components/atm/FormAtm";
 import Home from "./pages/dashboard/home";
+import PrivateRoute from "./components/PrivateRoute";
 
 function AppRoute() {
   return (
@@ -19,7 +20,16 @@ function AppRoute() {
       <Route path="/register" element={<Register />} />
 
       {/* Rutas privadas (con Sidebar) */}
-      <Route path="/" element={<Layout />}>
+      <Route
+        path="/"
+        element={
+
+          /* en esta parte esta el privateRoute quien nos redirige al login si no hay una sesionn iniciada */
+          <PrivateRoute>
+            <Layout />
+          </PrivateRoute>
+        }
+      >
         {/* Redirige desde "/" a "/home" */}
         <Route index element={<Navigate to="home" replace />} />
 
@@ -31,10 +41,10 @@ function AppRoute() {
         <Route path="atm" element={<Atm />} />
         <Route path="products/create" element={<FormCreateProduct />} />
         <Route path="products/edit/:id" element={<FormCreateProduct />} />
-        <Route path="category/create" element={<FormCategory />} />
-        <Route path="category/edit/:id" element={<FormCategory />} />
-        <Route path="atm/create" element={<FormAtm />} />
-        <Route path="atm/edit/:id" element={<FormAtm />} />
+        <Route path="category/create" element={<FormCategory modo="crear"/>} />
+        <Route path="category/edit/:id" element={<FormCategory modo="editar"/>} />
+        <Route path="atm/create" element={<FormAtm modo="crear" />} />
+        <Route path="atm/edit/:id" element={<FormAtm modo="editar"/>} />
       </Route>
     </Routes>
   );
