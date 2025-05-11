@@ -10,6 +10,7 @@ import FormCreateProduct from "./components/products/FormCreateProduct";
 import FormCategory from "./components/category/FormCategory";
 import FormAtm from "./components/atm/FormAtm";
 import Home from "./pages/dashboard/home";
+import PrivateRoute from "./components/PrivateRoute";
 
 function AppRoute() {
   return (
@@ -19,22 +20,25 @@ function AppRoute() {
       <Route path="/register" element={<Register />} />
 
       {/* Rutas privadas (con Sidebar) */}
-      <Route path="/" element={<Layout />}>
-        {/* Redirige desde "/" a "/home" */}
-        <Route index element={<Navigate to="home" replace />} />
 
-        {/* Otras rutas relativas */}
-        <Route path="home" element={<Home />} />
-        <Route path="products" element={<Products />} />
-        <Route path="category" element={<Category />} />
-        <Route path="orders" element={<Orders />} />
-        <Route path="atm" element={<Atm />} />
-        <Route path="products/create" element={<FormCreateProduct />} />
-        <Route path="products/edit/:id" element={<FormCreateProduct />} />
-        <Route path="category/create" element={<FormCategory />} />
-        <Route path="category/edit/:id" element={<FormCategory />} />
-        <Route path="atm/create" element={<FormAtm />} />
-        <Route path="atm/edit/:id" element={<FormAtm />} />
+      <Route element={<PrivateRoute requiredRole="ADMIN" />}>
+        <Route path="/" element={<Layout />}>
+          {/* Redirige desde "/" a "/home" */}
+          <Route index element={<Navigate to="home" replace />} />
+
+          {/* Otras rutas relativas */}
+          <Route path="home" element={<Home />} />
+          <Route path="products" element={<Products />} />
+          <Route path="category" element={<Category />} />
+          <Route path="orders" element={<Orders />} />
+          <Route path="atm" element={<Atm />} />
+          <Route path="products/create" element={<FormCreateProduct />} />
+          <Route path="products/edit/:id" element={<FormCreateProduct />} />
+          <Route path="category/create" element={<FormCategory />} />
+          <Route path="category/edit/:id" element={<FormCategory />} />
+          <Route path="atm/create" element={<FormAtm />} />
+          <Route path="atm/edit/:id" element={<FormAtm />} />
+        </Route>
       </Route>
     </Routes>
   );
