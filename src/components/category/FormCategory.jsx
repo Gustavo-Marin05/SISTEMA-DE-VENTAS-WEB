@@ -1,8 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { db } from "../../firebase/credentials";
-import { collection, addDoc, doc, setDoc, getDoc } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
+
+
 
 export default function FormCreateCategory({ modo = 'crear' }) {
   const navigate = useNavigate();

@@ -1,11 +1,8 @@
-import { signInWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { auth, db } from "../../firebase/credentials";
-import { doc, getDoc } from "firebase/firestore";
-
+import axios from "axios"; // Importamos Axios
 export default function Login() {
-  const [email, setEmail] = useState("");
+  const [ci, setCi] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
@@ -13,38 +10,27 @@ export default function Login() {
     e.preventDefault();
 
     try {
-      // Iniciar sesión
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
+      const response = await axios.post("http://localhost:4000/api/login", {
+        ci: ci,
+        password: password,
+      });
 
-      // Obtener datos del usuario desde la colección "usuarios"
-      const userDoc = await getDoc(doc(db, "usuarios", user.uid));
+      const userData = response.data;
 
-      if (!userDoc.exists()) {
-        alert("Usuario no encontrado en la base de datos.");
-        return;
-      }
-
-      const userData = userDoc.data();
-
-      if (userData.rol === "admin") {
+      // Redirección según el rol
+      if (userData.role === "ADMIN") {
         navigate("/home");
-      } else if (userData.rol === "user") {
-        // Verificar si es un ATM por existencia en colección "atm"
-        const atmDoc = await getDoc(doc(db, "atm", user.uid));
-
-        if (atmDoc.exists()) {
-          navigate("/atm"); // Página para ATM
-        } else {
-          navigate("/product"); // Página para usuario normal
-        }
+      } else if (userData.role === "USER") {
+        navigate("/product");
+      } else if (userData.role === "ATM") {
+        navigate("/atm");
       } else {
         alert("Rol no reconocido.");
       }
 
     } catch (error) {
       console.error("Error al iniciar sesión:", error);
-      alert("Correo o contraseña incorrectos.");
+      alert(error?.response?.data?.message || "Correo o contraseña incorrectos.");
     }
   };
 
@@ -56,13 +42,13 @@ export default function Login() {
         </h2>
         <form onSubmit={handleLogin}>
           <div className="mb-4">
-            <label className="block text-sm font-medium text-white">Email</label>
+            <label className="block text-sm font-medium text-white">CI</label>
             <input
-              type="email"
+              type="text"
               className="mt-2 p-2 w-full border bg-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Introduce tu email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Introduce tu CI"
+              value={ci}
+              onChange={(e) => setCi(e.target.value)}
               required
             />
           </div>

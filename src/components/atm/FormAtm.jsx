@@ -1,19 +1,9 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { db } from "../../firebase/credentials";
-import { doc, getDoc, setDoc, addDoc, collection } from "firebase/firestore";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+
 
 export default function FormAtm({ modo = "crear" }) {
-  const navigate = useNavigate();
-  const { id } = useParams();
-  const [user, setUser] = useState(null);
-
-  const [name, setName] = useState("");
-  const [password, setPassword] = useState("");
-  const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
-
+ 
 
   //obtenemos al usuario actual
   
