@@ -1,33 +1,44 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios"; // Importamos Axios
+import { useAuth } from "../../context/authContext";
 
 export default function Register() {
   const [nombre, setNombre] = useState("");
   const [ci, setCi] = useState("");
+  const [email, setEmail] = useState(""); // <-- nuevo estado
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+
+  const { sinup ,isAutenticated} = useAuth();
+  useEffect (()=>{
+    if(isAutenticated) navigate('/home')
+  },[isAutenticated,navigate])
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      // Hacer la solicitud POST al backend para crear un usuario
-      const response = await axios.post("http://localhost:4000/api/register", {
+      const user = {
         fullName: nombre,
         ci: ci,
+        email: email,
         password: password,
-      });
+      };
 
-      if (response.data.error) {
-        alert(response.data.error); // Mostrar error si lo hay
+      const response = await sinup(user);
+
+      if (response.error) {
+        alert(response.message || "Error al registrar");
       } else {
-        console.log("Usuario creado exitosamente");
-        navigate("/home"); // Redirigir al inicio después del registro
+        navigate("/home");
       }
     } catch (error) {
       console.error("Error al registrar:", error);
-      alert("Error al registrar: " + error.message);
+      if (error.response && error.response.data) {
+        console.error("Mensaje del backend:", error.response.data.message);
+      } else {
+        console.error("Error desconocido");
+      }
     }
   };
 
@@ -44,7 +55,7 @@ export default function Register() {
             </label>
             <input
               type="text"
-              className="mt-2 p-2 w-full border bg-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="mt-2 p-2 w-full border bg-white rounded-md"
               placeholder="Introduce tu nombre"
               value={nombre}
               onChange={(e) => setNombre(e.target.value)}
@@ -56,7 +67,7 @@ export default function Register() {
             <label className="block text-sm font-medium text-white">CI</label>
             <input
               type="text"
-              className="mt-2 p-2 w-full border bg-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="mt-2 p-2 w-full border bg-white rounded-md"
               placeholder="Introduce tu CI"
               value={ci}
               onChange={(e) => setCi(e.target.value)}
@@ -64,15 +75,27 @@ export default function Register() {
             />
           </div>
 
-      
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-white">
+              Email
+            </label>
+            <input
+              type="email"
+              className="mt-2 p-2 w-full border bg-white rounded-md"
+              placeholder="Introduce tu correo electrónico"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
 
           <div className="mb-6">
-            <label htmlFor="password" className="block text-sm font-medium text-white">
+            <label className="block text-sm font-medium text-white">
               Contraseña
             </label>
             <input
               type="password"
-              className="mt-2 p-2 w-full border bg-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="mt-2 p-2 w-full border bg-white rounded-md"
               placeholder="Introduce tu contraseña"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -83,9 +106,8 @@ export default function Register() {
           <button
             type="submit"
             className="w-full p-2 rounded-md text-white font-semibold 
-            bg-gradient-to-r from-[#0A0F1A] via-[#344980] to-[#0A0F1A] 
-            hover:via-[#121c30]  
-            focus:outline-none transition-all duration-300"
+              bg-gradient-to-r from-[#0A0F1A] via-[#344980] to-[#0A0F1A] 
+              hover:via-[#121c30] transition-all duration-300"
           >
             Registrar
           </button>

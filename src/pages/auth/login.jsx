@@ -1,47 +1,41 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { useAuth } from "../../context/authContext";
 
 export default function Login() {
-  const [email, setEmail] = useState(""); // Campo de email
-  const [password, setPassword] = useState(""); // Campo de contraseña
-  const navigate = useNavigate(); // Hook de navegación
+ 
+ 
+  const [email, setEmail] = useState(""); // <-- nuevo estado
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
+  const { sigin } = useAuth();
+ 
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  try {
-    const response = await axios.post(
-      "http://localhost:4000/api/login",
-      {
-        email,
-        password,
-      },
-      {
-        // Permite que las cookies HTTP-only funcionen si decides usarlas
-        withCredentials: true,
+    try {
+      const user = {
+        email: email,
+        password: password,
+      };
+
+      const response = await sigin(user);
+
+      if (response.error) {
+        alert(response.message || "Error al registrar");
+      } else {
+        navigate("/home");
       }
-    );
-
-    // Guardar tanto el token como el role en localStorage
-    localStorage.setItem("token", response.data.token);
-    localStorage.setItem("role", response.data.role);
-
-    console.log("Login exitoso");
-
-    // Redirige al usuario según su rol
-    if (response.data.role === "ADMIN") {
-      navigate("/home");
-    } else {
-      navigate("/login");
+    } catch (error) {
+      console.error("Error al registrar:", error);
+      if (error.response && error.response.data) {
+        console.error("Mensaje del backend:", error.response.data.message);
+      } else {
+        console.error("Error desconocido");
+      }
     }
-  } catch (error) {
-    const errorMessage = error.response?.data?.message || "Error al hacer login";
-    alert(errorMessage);
-    console.error("Login error:", errorMessage);
-  }
-};
-
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-custom">
@@ -51,7 +45,9 @@ export default function Login() {
         </h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-sm font-medium text-white">Email</label>
+            <label className="block text-sm font-medium text-white">
+              Email
+            </label>
             <input
               type="email"
               className="mt-2 p-2 w-full border bg-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"

@@ -1,30 +1,36 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { createCategory, updateCategory ,getCategoryById } from "../../api/category";
 
-export default function FormCategory({ modo = "crear", categoria = {} }) {
+
+export default function FormCategory({ modo = "crear" }) {
   const navigate = useNavigate();
+  const { id } = useParams(); // solo para modo editar
+  const [name, setName] = useState("");
 
-  // Estado de los inputs
-  const [nombre, setNombre] = useState("");
- 
-
-  // Si es edición, llenar los campos
+  // Obtener categoría si estamos en modo edición
   useEffect(() => {
-    if (modo === "editar" && categoria) {
-      setNombre(categoria.nombre || "");
-    
-    }
-  }, [modo, categoria]);
+  if (modo === "editar" && id) {
+    getCategoryById(id)
+      .then((res) => {
+        setName(res.data.name || "");
+      })
+      .catch((err) => {
+        console.error("Error al obtener categoría:", err);
+      });
+  }
+}, [modo, id]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    const categoryData = { name };
+
     if (modo === "crear") {
-      // Lógica para crear producto
-      console.log("Crear categoria", { nombre, cantProduct });
+      await createCategory(categoryData);
     } else {
-      // Lógica para editar producto
-      console.log("Editar categoria", { nombre, cantProduct });
+      await updateCategory(categoryData,id);
     }
+
     navigate("/category");
   };
 
@@ -33,7 +39,6 @@ export default function FormCategory({ modo = "crear", categoria = {} }) {
       <div className="bg-[#131C31] text-center h-10 rounded-t">
         <h1>{modo === "crear" ? "NEW CATEGORY" : "EDIT CATEGORY"}</h1>
       </div>
-
       <div className="flex justify-center m-5">
         <form onSubmit={handleSubmit} className="bg-[#29292D] p-5 w-80 rounded">
           <div className="flex flex-col mt-5">
@@ -41,12 +46,10 @@ export default function FormCategory({ modo = "crear", categoria = {} }) {
             <input
               type="text"
               className="bg-[#ffffffad] rounded text-black mt-2 h-8 p-3"
-              value={nombre}
-              onChange={(e) => setNombre(e.target.value)}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
             />
           </div>
-         
-
           <div className="flex justify-center mt-5">
             <button
               type="submit"

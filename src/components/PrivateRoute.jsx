@@ -1,17 +1,19 @@
 import { Navigate, Outlet } from "react-router-dom";
+import { useAuth } from "../context/authContext";
 
 const PrivateRoute = ({ requiredRole }) => {
-  const token = localStorage.getItem("token");
-  const role = localStorage.getItem("role"); // Asegúrate de guardar esto al hacer login
+  const {loading,isAutenticated}=useAuth()
 
-  if (!token) return <Navigate to="/login" replace />;
+  console.log( loading, isAutenticated)
 
-  // Validar el rol requerido
-  if (requiredRole && role !== requiredRole) {
-    return <Navigate to="/login" replace />;
+  if(loading) return <h1>loadin</h1>
+  if(!loading && !isAutenticated){
+    return <Navigate to='/login' replace/>
   }
 
-  return <Outlet />;
+  return(
+    <Outlet/>
+  )
 };
 
 export default PrivateRoute;

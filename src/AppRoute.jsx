@@ -21,7 +21,7 @@ function AppRoute() {
 
       {/* Rutas privadas (con Sidebar) */}
 
-      <Route element={<PrivateRoute requiredRole="ADMIN" />}>
+      <Route element={<PrivateRoute/>}>
         <Route path="/" element={<Layout />}>
           {/* Redirige desde "/" a "/home" */}
           <Route index element={<Navigate to="home" replace />} />
@@ -34,8 +34,8 @@ function AppRoute() {
           <Route path="atm" element={<Atm />} />
           <Route path="products/create" element={<FormCreateProduct />} />
           <Route path="products/edit/:id" element={<FormCreateProduct />} />
-          <Route path="category/create" element={<FormCategory />} />
-          <Route path="category/edit/:id" element={<FormCategory />} />
+          <Route path="category/create" element={<FormCategory modo="crear"/>} />
+          <Route path="category/edit/:id" element={<FormCategory modo="editar"/>} />
           <Route path="atm/create" element={<FormAtm />} />
           <Route path="atm/edit/:id" element={<FormAtm />} />
         </Route>
