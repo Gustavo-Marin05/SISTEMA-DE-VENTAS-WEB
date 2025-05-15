@@ -1,5 +1,5 @@
 import { useLocation, matchPath, useNavigate } from "react-router-dom";
-import { FaHome, FaBoxOpen, FaFileInvoice, FaCreditCard, FaTags } from "react-icons/fa";
+import { FaHome, FaBoxOpen, FaFileInvoice, FaCreditCard, FaTags, FaUserCircle } from "react-icons/fa";
 import { useAuth } from "../context/authContext"; // importa tu contexto
 
 export default function Navbar() {
@@ -26,12 +26,10 @@ export default function Navbar() {
   // Buscar la ruta que coincida con la actual
   const matchedRoute =
     routes.find(route => matchPath(route.path, location.pathname)) ||
-    { name: "Unknown", icon: <FaHome className="w-10 h-10 text-white ml-15" /> };
+    { name: "welcome", icon: <FaUserCircle className="w-10 h-10 text-white ml-15" /> };
 
   const handleLogout = () => {
-    logout();               // Limpia el estado del usuario
-    localStorage.removeItem("authToken"); // Opcional: limpiar token del almacenamiento
-    navigate("/login");     // Redirige al login
+    logout(); // Limpia el estado del usuario y redirige al login
   };
 
   return (

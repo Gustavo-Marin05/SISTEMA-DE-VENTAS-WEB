@@ -9,7 +9,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const { sigin } = useAuth();
+  const { signIn } = useAuth();
  
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -20,7 +20,7 @@ export default function Login() {
         password: password,
       };
 
-      const response = await sigin(user);
+      const response = await signIn(user);
 
       if (response.error) {
         alert(response.message || "Error al registrar");

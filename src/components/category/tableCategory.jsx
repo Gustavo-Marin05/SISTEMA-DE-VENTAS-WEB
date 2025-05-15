@@ -24,27 +24,21 @@ export default function TableCategory() {
       });
   }, []);
 
+  //borrar la categoria
 
+  const handleDeleteCategory = async (id) => {
+    console.log("Intentando eliminar categoría con ID:", id);
+    const confirmDelete = window.confirm("¿Seguro de borrar la categoría?");
+    if (!confirmDelete) return;
 
-  //borrar la categoria 
-
-  const handleDeleteCategory =async (id)=>{
-
-    const confirmDelete = window.confirm('seguro de borrar la categoria')
-     if(!confirmDelete) return;
-
-     try {
-      await deleteCategory(id)
-
+    try {
+      await deleteCategory(id);
       const res = await getAllCategories();
-
-      setCategories(res.data)
-      
-     } catch (error) {
+      setCategories(res.data);
+    } catch (error) {
       console.error("Error al eliminar categoría", error);
-     }
-
-  }
+    }
+  };
 
   return (
     <div className="flex justify-center">
@@ -67,10 +61,11 @@ export default function TableCategory() {
               {categories.map((category) => (
                 <tr key={category.id}>
                   <td className="px-4 py-2">{category.name}</td>
-                  <td className="px-4 py-2">{category.productCount || 0}</td>
+                  <td className="px-4 py-2">{category.products?.length || 0}</td>
                   <td className="px-4 py-2">
-                    <button className="bg-red-500 text-white px-4 py-1 rounded mr-2 hover:bg-red-600"
-                    onClick={()=>handleDeleteCategory(category.id)}
+                    <button
+                      className="bg-red-500 text-white px-4 py-1 rounded mr-2 hover:bg-red-600"
+                      onClick={() => handleDeleteCategory(category.id)}
                     >
                       Delete
                     </button>

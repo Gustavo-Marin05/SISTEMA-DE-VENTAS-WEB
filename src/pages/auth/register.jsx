@@ -9,7 +9,7 @@ export default function Register() {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const { sinup ,isAutenticated} = useAuth();
+  const { signUp ,isAutenticated} = useAuth();
   useEffect (()=>{
     if(isAutenticated) navigate('/home')
   },[isAutenticated,navigate])
@@ -25,7 +25,7 @@ export default function Register() {
         password: password,
       };
 
-      const response = await sinup(user);
+      const response = await signUp(user);
 
       if (response.error) {
         alert(response.message || "Error al registrar");

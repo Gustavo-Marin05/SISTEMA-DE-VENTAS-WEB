@@ -1,7 +1,10 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { createCategory, updateCategory ,getCategoryById } from "../../api/category";
-
+import {
+  createCategory,
+  updateCategory,
+  getCategoryById,
+} from "../../api/category";
 
 export default function FormCategory({ modo = "crear" }) {
   const navigate = useNavigate();
@@ -10,17 +13,20 @@ export default function FormCategory({ modo = "crear" }) {
 
   // Obtener categoría si estamos en modo edición
   useEffect(() => {
-  if (modo === "editar" && id) {
-    getCategoryById(id)
-      .then((res) => {
-        setName(res.data.name || "");
-      })
-      .catch((err) => {
-        console.error("Error al obtener categoría:", err);
-      });
-  }
-}, [modo, id]);
+    if (modo === "editar" && id) {
+      getCategoryById(id)
+        .then((res) => {
+          setName(res.data.name || "");
+        })
+        .catch((err) => {
+          console.error("Error al obtener categoría:", err);
+        });
+    }
+  }, [modo, id]);
 
+
+
+  //creacion de la categoria
   const handleSubmit = async (e) => {
     e.preventDefault();
     const categoryData = { name };
@@ -28,7 +34,7 @@ export default function FormCategory({ modo = "crear" }) {
     if (modo === "crear") {
       await createCategory(categoryData);
     } else {
-      await updateCategory(categoryData,id);
+      await updateCategory(categoryData, id);
     }
 
     navigate("/category");
