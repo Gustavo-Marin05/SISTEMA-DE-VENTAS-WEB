@@ -13,7 +13,7 @@ export default function Navbar() {
     { path: "/home", name: "HOME", icon: <FaHome className="w-10 h-10 text-white ml-15" /> },
     { path: "/products", name: "PRODUCTS", icon: <FaBoxOpen className="w-10 h-10 text-white ml-15" /> },
     { path: "/category", name: "CATEGORY", icon: <FaTags className="w-10 h-10 text-white ml-15" /> },
-    { path: "/orders", name: "ORDERS", icon: <FaFileInvoice className="w-10 h-10 text-white ml-15" /> },
+    { path: "/customer", name: "CUSTOMER", icon: <FaFileInvoice className="w-10 h-10 text-white ml-15" /> },
     { path: "/atm", name: "ATM", icon: <FaCreditCard className="w-10 h-10 text-white ml-15" /> },
     { path: "/products/create", name: "CREATE PRODUCT", icon: <FaBoxOpen className="w-10 h-10 text-white ml-15" /> },
     { path: "/products/edit/:id", name: "EDIT PRODUCT", icon: <FaBoxOpen className="w-10 h-10 text-white ml-15" /> },

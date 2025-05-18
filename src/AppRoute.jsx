@@ -5,7 +5,6 @@ import Layout from "./components/layout";  // Componente principal del diseño
 import Products from "./pages/dashboard/Products";
 import Category from "./pages/dashboard/category";
 import Atm from "./pages/dashboard/atm";
-import Orders from "./pages/dashboard/orders";
 import FormCreateProduct from "./components/products/FormCreateProduct";
 import FormCategory from "./components/category/FormCategory";
 import FormAtm from "./components/atm/FormAtm";
@@ -15,6 +14,7 @@ import Atmdashboard from "./pages/dashboardAtm/atmdash";
 import AdminRoute from "./context/adminRoute";
 import UserRoute from "./context/userRoute";
 import UserLayout from "./components/componentsAtmDashboard/userLayout";
+import Customer from "./pages/dashboard/customer";
 
 function AppRoute() {
   return (
@@ -35,7 +35,7 @@ function AppRoute() {
             <Route path="home" element={<Home />} />
             <Route path="products" element={<Products />} />
             <Route path="category" element={<Category />} />
-            <Route path="orders" element={<Orders />} />
+            <Route path="customer" element={<Customer />} />
             <Route path="atm" element={<Atm />} />
             <Route path="products/create" element={<FormCreateProduct modo="crear" />} />
             <Route path="products/edit/:id" element={<FormCreateProduct modo="editar" />} />

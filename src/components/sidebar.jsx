@@ -30,10 +30,10 @@ export default function Sidebar() {
             Products
           </div>
         </Link>
-        <Link to="/orders" className="text-lg">
+        <Link to="/customer" className="text-lg">
           <div className="bg-[#0C1320] p-3 rounded hover:border transition flex items-center gap-4">
             <FaFileInvoice size={20} />
-            Orders
+            Customer
           </div>
         </Link>
         <Link to="/atm" className="text-lg">
