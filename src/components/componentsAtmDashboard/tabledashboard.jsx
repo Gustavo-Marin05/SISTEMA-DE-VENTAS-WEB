@@ -1,111 +1,204 @@
-import { useState } from 'react';
+import { useState, useEffect } from "react";
+import { getAllProducts } from "../../api/products.js";
+import { createInvoice } from "../../api/invoice.js";
 
-export default function TableDashboard() {
-  // Estado para manejar los productos añadidos
-  const [products, setProducts] = useState([{}]); // Array que contiene los productos
+export default function InvoiceForm() {
+  const [products, setProducts] = useState([]);
+  const [formData, setFormData] = useState({
+    customerCi: "",
+    customerFullName: "",
+    products: [{ productId: "", quantity: "", unitPrice: 0 }],
+  });
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
+  const [total, setTotal] = useState(0);
 
-  // Función para añadir un nuevo producto
-  const handleAddProduct = () => {
-    setProducts([...products, {}]); // Añadir un objeto vacío para el nuevo producto
+  useEffect(() => {
+    getAllProducts()
+      .then((res) => setProducts(res.data))
+      .catch((err) => {
+        console.error("Error al cargar productos:", err);
+        setError("Error al cargar productos");
+      });
+  }, []);
+
+  useEffect(() => {
+    const totalCalc = formData.products.reduce(
+      (acc, item) => acc + (parseInt(item.quantity) || 0) * item.unitPrice,
+      0
+    );
+    setTotal(totalCalc);
+  }, [formData.products]);
+
+  const handleInputChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleProductChange = (index, e) => {
+    const updatedProducts = [...formData.products];
+    const name = e.target.name;
+    let value = e.target.value;
+
+    if (name === "quantity") {
+      // permitir valores vacíos temporalmente
+      updatedProducts[index][name] = value;
+    } else {
+      updatedProducts[index][name] = value;
+
+      // si cambió el producto, actualizamos el precio unitario
+      if (name === "productId") {
+        const selectedProduct = products.find((p) => p.id === parseInt(value));
+        updatedProducts[index].unitPrice = selectedProduct
+          ? selectedProduct.price
+          : 0;
+      }
+    }
+
+    setFormData({ ...formData, products: updatedProducts });
+  };
+
+  const addProduct = () => {
+    setFormData({
+      ...formData,
+      products: [
+        ...formData.products,
+        { productId: "", quantity: "", unitPrice: 0 },
+      ],
+    });
+  };
+
+  const removeProduct = (index) => {
+    const updatedProducts = formData.products.filter((_, i) => i !== index);
+    setFormData({ ...formData, products: updatedProducts });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError(null);
+    setSuccess(null);
+
+    try {
+      const payload = {
+        ...formData,
+        products: formData.products.map((p) => ({
+          productId: p.productId,
+          quantity: parseInt(p.quantity) || 1, // fallback por si acaso
+        })),
+      };
+
+      const response = await createInvoice(payload);
+      setSuccess("Factura creada correctamente");
+      setFormData({
+        customerCi: "",
+        customerFullName: "",
+        products: [{ productId: "", quantity: "", unitPrice: 0 }],
+      });
+    } catch (error) {
+      console.error(
+        "Detalles del error:",
+        error.response?.data || error.message
+      );
+      setError(error.response?.data?.error || "Error al crear factura");
+    }
   };
 
   return (
-    <div className="bg-[#364b79] w-200 mt-5 rounded-2xl">
-      <table className="min-w-full">
-        {/* Sección de datos del cliente */}
-        <div className="bg-[#131C31] p-3 m-4 rounded-lg shadow-lg  text-white">
-          <h1 className="text-2xl font-bold mb-4 text-center">DATOS DEL CLIENTE</h1>
-          <div className="flex justify-center gap-8">
-            <div className="flex flex-col">
-              <label className="text-sm text-gray-300 mb-2" htmlFor="name">Nombre del cliente</label>
-              <input 
-                type="text" 
-                name="name" 
-                className="px-4 py-2 bg-[#2C3B56] border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-[#364b79] text-white"
-                placeholder="Ingrese el nombre" 
-              />
-            </div>
-            <div className="flex flex-col">
-              <label className="text-sm text-gray-300 mb-2" htmlFor="ci">CI del cliente</label>
-              <input 
-                type="text" 
-                name="ci" 
-                className="px-4 py-2 bg-[#2C3B56] border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-[#364b79] text-white"
-                placeholder="Ingrese el CI" 
-              />
-            </div>
-          </div>
-        </div>
+    <form
+      onSubmit={handleSubmit}
+      className="p-6 bg-white rounded shadow-md max-w-3xl mx-auto"
+    >
+      <h2 className="mb-4 text-2xl font-semibold">Crear Factura</h2>
 
-        {/* Sección de datos de productos */}
-        <div className="bg-[#131C31] p-6 m-4 rounded-lg shadow-lg text-white ">
-          <h1 className="text-2xl font-bold mb-4 text-center">DATOS DE LOS PRODUCTOS</h1>
+      <label className="block mb-2">C.I. Cliente</label>
+      <input
+        type="text"
+        name="customerCi"
+        value={formData.customerCi}
+        onChange={handleInputChange}
+        className="border px-2 py-1 mb-4 w-full"
+        required
+      />
 
-          {/* Contenedor con scroll */}
-          <div className="max-h-35 overflow-y-auto"> 
-            {/* Renderizar cada producto */}
-            {products.map((product, index) => (
-              <div key={index} className="mb-6 overflow-hidden border-1 m-2 p-2 border-amber-300">
-                <div className="flex justify-between gap-8">
-                  <div className="flex flex-col w-1/3">
-                    <label htmlFor={`nameProduct${index}`} className="text-sm text-gray-300 mb-2">Seleccionar Producto</label>
-                    <select
-                      name={`nameProduct${index}`}
-                      id={`nameProduct${index}`}
-                      className="px-4 py-2 bg-[#2C3B56] border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-[#364b79] text-white"
-                    >
-                      <option value="">Seleccionar Producto</option>
-                      <option value="producto1">Producto 1</option>
-                      <option value="producto2">Producto 2</option>
-                      <option value="producto3">Producto 3</option>
-                    </select>
-                  </div>
+      <label className="block mb-2">Nombre completo cliente</label>
+      <input
+        type="text"
+        name="customerFullName"
+        value={formData.customerFullName}
+        onChange={handleInputChange}
+        className="border px-2 py-1 mb-4 w-full"
+        required
+      />
+      <h1>secion del producto</h1>
 
-                  <div className="flex flex-col w-1/3">
-                    <label htmlFor={`cantidad${index}`} className="text-sm text-gray-300 mb-2">Cantidad</label>
-                    <input
-                      type="number"
-                      name={`cantidad${index}`}
-                      id={`cantidad${index}`}
-                      className="px-4 py-2 bg-[#2C3B56] border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-[#364b79] text-white"
-                      placeholder="Cantidad"
-                    />
-                  </div>
+      {formData.products.map((prod, index) => (
+        <div key={index} className="mb-4 grid grid-cols-4 gap-4 items-center">
 
-                  <div className="flex flex-col w-1/3">
-                    <label htmlFor={`price${index}`} className="text-sm text-gray-300 mb-2">Precio</label>
-                    <input
-                      type="number"
-                      name={`price${index}`}
-                      id={`price${index}`}
-                      className="px-4 py-2 bg-[#2C3B56] border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-[#364b79] text-white"
-                      placeholder="Precio"
-                    />
-                  </div>
-                </div>
-              </div>
+          <select
+            name="productId"
+            value={prod.productId}
+            onChange={(e) => handleProductChange(index, e)}
+            className="border px-2 py-1"
+            required
+          >
+            <option value="">Seleccionar producto</option>
+            {products.map((p) => (
+              <option key={p.id} value={p.id}>
+                {p.name}
+              </option>
             ))}
-          </div>
+          </select>
 
-          {/* Botón para agregar un nuevo producto */}
-          <div className="flex justify-center mb-4">
-            <button 
-              onClick={handleAddProduct} 
-              className="px-6 py-2 bg-[#364b79] text-white rounded-md hover:bg-[#2c4b74]"
+          <input
+            type="number"
+            name="quantity"
+            min="1"
+            value={prod.quantity}
+            onChange={(e) => handleProductChange(index, e)}
+            className="border px-2 py-1"
+            required
+          />
+
+
+          <input
+            type="text"
+            readOnly
+            value={`Bs ${prod.unitPrice.toFixed(2)}`}
+            className="border px-2 py-1 bg-gray-100"
+          />
+
+          {index > 0 && (
+            <button
+              type="button"
+              onClick={() => removeProduct(index)}
+              className="text-red-600 font-bold"
             >
-              ADD PRODUCT
+              X
             </button>
-          </div>
-
+          )}
         </div>
+      ))}
 
-        {/* Botón para crear la factura */}
-        <div className="flex justify-center mb-4">
-          <button className="px-6 py-2 bg-[#131C31] text-white rounded-md hover:bg-[#2C3B56]">
-            Crear Factura
-          </button>
-        </div>
-      </table>
-    </div>
+      <button
+        type="button"
+        onClick={addProduct}
+        className="mb-4 text-blue-600 underline"
+      >
+        + Agregar producto
+      </button>
+
+      <div className="mb-4 font-semibold text-lg">
+        Total: <span className="text-green-700">Bs {total.toFixed(2)}</span>
+      </div>
+
+      {error && <p className="text-red-600 mb-2">{error}</p>}
+      {success && <p className="text-green-600 mb-2">{success}</p>}
+
+      <button
+        type="submit"
+        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+      >
+        Crear factura
+      </button>
+    </form>
   );
 }
