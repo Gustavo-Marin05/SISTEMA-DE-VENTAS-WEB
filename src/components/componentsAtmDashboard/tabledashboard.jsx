@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { getAllProducts } from "../../api/products.js";
 import { createInvoice } from "../../api/invoice.js";
+import { getCustomerByCi } from "../../api/customer.js";
 
 export default function InvoiceForm() {
   const [products, setProducts] = useState([]);
@@ -9,6 +10,9 @@ export default function InvoiceForm() {
     customerFullName: "",
     products: [{ productId: "", quantity: "", unitPrice: 0 }],
   });
+
+  const [customerFound, setCustomerFound] = useState(false);
+
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const [total, setTotal] = useState(0);
@@ -31,7 +35,25 @@ export default function InvoiceForm() {
   }, [formData.products]);
 
   const handleInputChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleCustomerCiBlur = async () => {
+    if (!formData.customerCi) return;
+
+    try {
+      const res = await getCustomerByCi(formData.customerCi);
+      setFormData({
+        ...formData,
+        customerFullName: res.data.fullName,
+      });
+      setCustomerFound(true);
+    } catch (error) {
+      console.log("Cliente no encontrado, puedes registrarlo");
+      setFormData({ ...formData, customerFullName: "" });
+      setCustomerFound(false);
+    }
   };
 
   const handleProductChange = (index, e) => {
@@ -108,31 +130,45 @@ export default function InvoiceForm() {
       className="p-6 bg-white rounded shadow-md max-w-3xl mx-auto"
     >
       <h2 className="mb-4 text-2xl font-semibold">Crear Factura</h2>
-
       <label className="block mb-2">C.I. Cliente</label>
       <input
         type="text"
         name="customerCi"
         value={formData.customerCi}
         onChange={handleInputChange}
+        onBlur={handleCustomerCiBlur}
         className="border px-2 py-1 mb-4 w-full"
         required
       />
 
-      <label className="block mb-2">Nombre completo cliente</label>
-      <input
-        type="text"
-        name="customerFullName"
-        value={formData.customerFullName}
-        onChange={handleInputChange}
-        className="border px-2 py-1 mb-4 w-full"
-        required
-      />
+      {customerFound ? (
+        <>
+          <label className="block mb-2">Nombre completo cliente</label>
+          <input
+            type="text"
+            name="customerFullName"
+            value={formData.customerFullName}
+            readOnly
+            className="border px-2 py-1 mb-4 w-full bg-gray-100"
+          />
+        </>
+      ) : (
+        <>
+          <label className="block mb-2">Nombre del cliente</label>
+          <input
+            type="text"
+            name="customerFullName"
+            value={formData.customerFullName}
+            onChange={handleInputChange}
+            className="border px-2 py-1 mb-4 w-full"
+            required
+          />
+        </>
+      )}
+
       <h1>secion del producto</h1>
-
       {formData.products.map((prod, index) => (
         <div key={index} className="mb-4 grid grid-cols-4 gap-4 items-center">
-
           <select
             name="productId"
             value={prod.productId}
@@ -158,7 +194,6 @@ export default function InvoiceForm() {
             required
           />
 
-
           <input
             type="text"
             readOnly
@@ -177,7 +212,6 @@ export default function InvoiceForm() {
           )}
         </div>
       ))}
-
       <button
         type="button"
         onClick={addProduct}
@@ -185,14 +219,11 @@ export default function InvoiceForm() {
       >
         + Agregar producto
       </button>
-
       <div className="mb-4 font-semibold text-lg">
         Total: <span className="text-green-700">Bs {total.toFixed(2)}</span>
       </div>
-
       {error && <p className="text-red-600 mb-2">{error}</p>}
       {success && <p className="text-green-600 mb-2">{success}</p>}
-
       <button
         type="submit"
         className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
