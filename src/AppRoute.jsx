@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom"; 
-import Login from "./pages/auth/Login";
-import Register from "./pages/auth/Register";
+import Login from "./pages/auth/login";
+import Register from "./pages/auth/register";
 import Layout from "./components/layout";  // Componente principal del diseño
 import Products from "./pages/dashboard/Products";
 import Category from "./pages/dashboard/category";
