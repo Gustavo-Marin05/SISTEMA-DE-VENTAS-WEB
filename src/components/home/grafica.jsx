@@ -8,7 +8,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { useEffect, useState } from "react";
-import axios from "axios";
+
 import { getallinvoice } from "../../api/invoice";
 
 export default function Graphic() {
