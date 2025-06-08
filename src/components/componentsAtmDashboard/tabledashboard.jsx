@@ -143,7 +143,7 @@ export default function InvoiceForm() {
 
       {customerFound ? (
         <>
-          <label className="block mb-2">Nombre completo cliente</label>
+          <label className="block mb-2">Nombre del cliente</label>
           <input
             type="text"
             name="customerFullName"
