@@ -1,7 +1,8 @@
 import axios  from "axios";
-/* http://localhost:4000/api */
+
  const instance = axios.create({
-    baseURL: 'https://todito.onrender.com/api', // ✅ URL de tu backend
+    //baseURL: 'https://todito.onrender.com/api',
+    baseURL: process.env.REACT_APP_API_URL || 'http://localhost:4000/api', 
     withCredentials: true,
 })
 
