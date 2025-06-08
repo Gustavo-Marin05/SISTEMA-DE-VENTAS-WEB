@@ -126,110 +126,108 @@ export default function InvoiceForm() {
 
   return (
     <form
-      onSubmit={handleSubmit}
-      className="p-6 bg-white rounded shadow-md max-w-3xl mx-auto"
+  onSubmit={handleSubmit}
+  className="p-6 rounded shadow-md max-w-3xl mx-auto mt-4 bg-[#131C31] text-white"
+>
+  <h2 className="mb-4 text-2xl font-semibold text-white">Crear Factura</h2>
+
+  <label className="block mb-2 text-white">C.I. Cliente</label>
+  <input
+    type="text"
+    name="customerCi"
+    value={formData.customerCi}
+    onChange={handleInputChange}
+    onBlur={handleCustomerCiBlur}
+    className="bg-[#263556] border border-[#2E3A4B] px-2 py-1 mb-4 w-full text-white"
+    required
+  />
+
+  {/* Repite esto para el nombre del cliente */}
+  <label className="block mb-2 text-white">Nombre del cliente</label>
+  <input
+    type="text"
+    name="customerFullName"
+    value={formData.customerFullName}
+    onChange={handleInputChange}
+    readOnly={customerFound}
+    className={`px-2 py-1 mb-4 w-full ${
+      customerFound ? "bg-gray-500" : "bg-[#263556]"
+    } border border-[#2E3A4B] text-white`}
+    required
+  />
+
+  <h1 className="text-lg font-semibold mb-2">Sección del producto</h1>
+  {formData.products.map((prod, index) => (
+    <div
+      key={index}
+      className="mb-4 grid grid-cols-4 gap-4 items-center text-white"
     >
-      <h2 className="mb-4 text-2xl font-semibold">Crear Factura</h2>
-      <label className="block mb-2">C.I. Cliente</label>
+      <select
+        name="productId"
+        value={prod.productId}
+        onChange={(e) => handleProductChange(index, e)}
+        className="bg-[#263556] border border-[#2E3A4B] px-2 py-1 text-white"
+        required
+      >
+        <option value="">Seleccionar producto</option>
+        {products.map((p) => (
+          <option key={p.id} value={p.id}>
+            {p.name}
+          </option>
+        ))}
+      </select>
+
       <input
-        type="text"
-        name="customerCi"
-        value={formData.customerCi}
-        onChange={handleInputChange}
-        onBlur={handleCustomerCiBlur}
-        className="border px-2 py-1 mb-4 w-full"
+        type="number"
+        name="quantity"
+        min="1"
+        value={prod.quantity}
+        onChange={(e) => handleProductChange(index, e)}
+        className="bg-[#263556] border border-[#2E3A4B] px-2 py-1 text-white"
         required
       />
 
-      {customerFound ? (
-        <>
-          <label className="block mb-2">Nombre del cliente</label>
-          <input
-            type="text"
-            name="customerFullName"
-            value={formData.customerFullName}
-            readOnly
-            className="border px-2 py-1 mb-4 w-full bg-gray-100"
-          />
-        </>
-      ) : (
-        <>
-          <label className="block mb-2">Nombre del cliente</label>
-          <input
-            type="text"
-            name="customerFullName"
-            value={formData.customerFullName}
-            onChange={handleInputChange}
-            className="border px-2 py-1 mb-4 w-full"
-            required
-          />
-        </>
+      <input
+        type="text"
+        readOnly
+        value={`Bs ${prod.unitPrice.toFixed(2)}`}
+        className="bg-[#2E3A4B] px-2 py-1 border border-[#2E3A4B] text-white"
+      />
+
+      {index > 0 && (
+        <button
+          type="button"
+          onClick={() => removeProduct(index)}
+          className="text-red-400 font-bold"
+        >
+          X
+        </button>
       )}
+    </div>
+  ))}
 
-      <h1>secion del producto</h1>
-      {formData.products.map((prod, index) => (
-        <div key={index} className="mb-4 grid grid-cols-4 gap-4 items-center">
-          <select
-            name="productId"
-            value={prod.productId}
-            onChange={(e) => handleProductChange(index, e)}
-            className="border px-2 py-1"
-            required
-          >
-            <option value="">Seleccionar producto</option>
-            {products.map((p) => (
-              <option key={p.id} value={p.id}>
-                {p.name}
-              </option>
-            ))}
-          </select>
+  <button
+    type="button"
+    onClick={addProduct}
+    className="mb-4 text-[#00BFFF] underline"
+  >
+    + Agregar producto
+  </button>
 
-          <input
-            type="number"
-            name="quantity"
-            min="1"
-            value={prod.quantity}
-            onChange={(e) => handleProductChange(index, e)}
-            className="border px-2 py-1"
-            required
-          />
+  <div className="mb-4 font-semibold text-lg text-white">
+    Total: <span className="text-green-400">Bs {total.toFixed(2)}</span>
+  </div>
 
-          <input
-            type="text"
-            readOnly
-            value={`Bs ${prod.unitPrice.toFixed(2)}`}
-            className="border px-2 py-1 bg-gray-100"
-          />
+  {error && <p className="text-red-400 mb-2">{error}</p>}
+  {success && <p className="text-green-400 mb-2">{success}</p>}
 
-          {index > 0 && (
-            <button
-              type="button"
-              onClick={() => removeProduct(index)}
-              className="text-red-600 font-bold"
-            >
-              X
-            </button>
-          )}
-        </div>
-      ))}
-      <button
-        type="button"
-        onClick={addProduct}
-        className="mb-4 text-blue-600 underline"
-      >
-        + Agregar producto
-      </button>
-      <div className="mb-4 font-semibold text-lg">
-        Total: <span className="text-green-700">Bs {total.toFixed(2)}</span>
-      </div>
-      {error && <p className="text-red-600 mb-2">{error}</p>}
-      {success && <p className="text-green-600 mb-2">{success}</p>}
-      <button
-        type="submit"
-        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-      >
-        Crear factura
-      </button>
-    </form>
+  <button
+    type="submit"
+    className="bg-[#2E3A4B] hover:bg-[#263556] text-white px-4 py-2 rounded"
+  >
+    Crear factura
+  </button>
+</form>
+
   );
 }

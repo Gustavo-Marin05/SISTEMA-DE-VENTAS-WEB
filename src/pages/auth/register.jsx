@@ -10,37 +10,35 @@ export default function Register() {
   const navigate = useNavigate();
 
   const { signUp ,isAutenticated} = useAuth();
-  useEffect (()=>{
-    if(isAutenticated) navigate('/home')
-  },[isAutenticated,navigate])
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    try {
-      const user = {
-        fullName: nombre,
-        ci: ci,
-        email: email,
-        password: password,
-      };
+  try {
+    const user = {
+      fullName: nombre,
+      ci: ci,
+      email: email,
+      password: password,
+    };
 
-      const response = await signUp(user);
+    const response = await signUp(user);
 
-      if (response.error) {
-        alert(response.message || "Error al registrar");
-      } else {
-        navigate("/home");
-      }
-    } catch (error) {
-      console.error("Error al registrar:", error);
-      if (error.response && error.response.data) {
-        console.error("Mensaje del backend:", error.response.data.message);
-      } else {
-        console.error("Error desconocido");
-      }
+    if (response.error) {
+      alert(response.message || "Error al registrar");
+    } else {
+      alert("Registro exitoso. Ahora inicia sesión.");
+      navigate("/login"); // redirige al login después del registro
     }
-  };
+  } catch (error) {
+    console.error("Error al registrar:", error);
+    if (error.response && error.response.data) {
+      console.error("Mensaje del backend:", error.response.data.message);
+    } else {
+      console.error("Error desconocido");
+    }
+  }
+};
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-custom">

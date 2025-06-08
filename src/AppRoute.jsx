@@ -15,6 +15,7 @@ import AdminRoute from "./context/adminRoute";
 import UserRoute from "./context/userRoute";
 import UserLayout from "./components/componentsAtmDashboard/userLayout";
 import Customer from "./pages/dashboard/customer";
+import CustomeInvoice from "./components/customer/formCustomInvoice";
 
 function AppRoute() {
   return (
@@ -43,6 +44,9 @@ function AppRoute() {
             <Route path="category/edit/:id" element={<FormCategory modo="editar" />} />
             <Route path="atm/create" element={<FormAtm modo="crear" />} />
             <Route path="atm/edit/:id" element={<FormAtm modo="editar" />} />
+
+            <Route path="customer/invoice/:id" element={<CustomeInvoice/>} />
+
           </Route>
         </Route>
 
