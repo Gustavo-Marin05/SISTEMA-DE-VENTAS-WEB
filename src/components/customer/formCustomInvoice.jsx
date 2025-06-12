@@ -37,12 +37,8 @@ const CustomerInvoice = () => {
 
   return (
     <div className="flex flex-col items-center p-4">
-      <h2 className="text-2xl font-bold  mb-2">
-        Cliente: {customer.fullName}
-      </h2>
-      <h2 className="text-2xl font-bold  mb-2">
-        nit/ci: {customer.ci}
-      </h2>
+      <h2 className="text-2xl font-bold  mb-2">Cliente: {customer.fullName}</h2>
+      <h2 className="text-2xl font-bold  mb-2">nit/ci: {customer.ci}</h2>
       <h3 className="text-xl  mb-4">Facturas:</h3>
 
       {customer.invoices?.length > 0 ? (
@@ -54,6 +50,7 @@ const CustomerInvoice = () => {
                 <th className="px-6 py-3">iva</th>
                 <th className="px-6 py-3">Monto</th>
                 <th className="px-6 py-3">Fecha</th>
+                <th className="px-6 py-3">factura</th>
               </tr>
             </thead>
             <tbody>
@@ -67,6 +64,17 @@ const CustomerInvoice = () => {
                   <td className="px-6 py-4">{invoice.total}</td>
                   <td className="px-6 py-4">
                     {new Date(invoice.createdAt).toLocaleDateString()}
+                  </td>
+
+                  <td>
+                    <a
+                      href={`http://localhost:4000/api/invoice/${invoice.id}/pdf`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-400 hover:underline"
+                    >
+                      imprimir
+                    </a>
                   </td>
                 </tr>
               ))}
