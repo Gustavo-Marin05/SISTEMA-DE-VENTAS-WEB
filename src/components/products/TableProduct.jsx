@@ -31,7 +31,7 @@ export default function TableProduct() {
   //borramos la categoria
   const handleDeleteProduct = async (id) => {
     console.log("Intentando eliminar el producto:");
-    const confirmDelete = window.confirm("¿Seguro de borrar la categoría?");
+    const confirmDelete = window.confirm("¿Seguro de borrar el producto?");
     if (!confirmDelete) return;
 
     try {
@@ -39,7 +39,7 @@ export default function TableProduct() {
       const res = await getAllProducts();
       setProducts(res.data);
     } catch (error) {
-      console.error("Error al eliminar categoría", error);
+      console.error("Error al eliminar el producto", error);
     }
   };
 

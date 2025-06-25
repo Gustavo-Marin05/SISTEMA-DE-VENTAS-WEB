@@ -1,16 +1,20 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { getAllCategories } from "../../api/category";
-import { createProduct, getProductById, updateProduct } from "../../api/products";
+import {
+  createProduct,
+  getProductById,
+  updateProduct,
+} from "../../api/products";
 
 export default function FormCreateProduct({ modo = "crear" }) {
   const navigate = useNavigate();
   const { id } = useParams(); // solo para editar
   const [formData, setFormData] = useState({
     name: "",
-    price: 0,
-    stock: 0,
-    categoryId: ""
+    price: "",
+    stock: "",
+    categoryId: "",
   });
   const [categories, setCategories] = useState([]);
   const [error, setError] = useState("");
@@ -35,7 +39,7 @@ export default function FormCreateProduct({ modo = "crear" }) {
             name: product.name,
             price: product.price,
             stock: product.stock,
-            categoryId: product.categoryId
+            categoryId: product.categoryId,
           });
         })
         .catch((err) => {
@@ -48,12 +52,7 @@ export default function FormCreateProduct({ modo = "crear" }) {
   // 3. Manejar cambios
   const handleChange = (e) => {
     const { name, value } = e.target;
-    const parsedValue =
-      name === "price" || name === "stock" || name === "categoryId"
-        ? Number(value)
-        : value;
-
-    setFormData((prev) => ({ ...prev, [name]: parsedValue }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   // 4. Enviar formulario
@@ -61,12 +60,38 @@ export default function FormCreateProduct({ modo = "crear" }) {
     e.preventDefault();
     setError("");
 
+    // Validaciones básicas
+    if (!formData.name.trim()) {
+      return setError("El nombre del producto es obligatorio.");
+    }
+
+    if (isNaN(parseFloat(formData.price)) || parseFloat(formData.price) < 0) {
+      return setError("El precio debe ser un número positivo.");
+    }
+
+    if (isNaN(parseInt(formData.stock)) || parseInt(formData.stock) < 0) {
+      return setError("El stock debe ser un número entero positivo.");
+    }
+
+    if (!formData.categoryId) {
+      return setError("Debes seleccionar una categoría.");
+    }
+
     try {
+      // Preparar datos convertidos correctamente
+      const dataToSend = {
+        ...formData,
+        price: parseFloat(formData.price),
+        stock: parseInt(formData.stock),
+        categoryId: parseInt(formData.categoryId),
+      };
+
       if (modo === "crear") {
-        await createProduct(formData);
+        await createProduct(dataToSend);
       } else if (modo === "editar" && id) {
-        await updateProduct(id, formData);
+        await updateProduct(id, dataToSend);
       }
+
       navigate("/products");
     } catch (error) {
       console.error("Error al procesar el producto:", error);
