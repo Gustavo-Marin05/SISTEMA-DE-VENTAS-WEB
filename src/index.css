@@ -2,10 +2,9 @@
 /* styles.css */
 
 /* styles.css */
-.bg-custom {
+body {
   background-color: #141E2C;
 }
-
-.bg-form{
-  background-color: #29292D;
+.bg-fondo{
+  background-color: #010c1bc7;
 }
