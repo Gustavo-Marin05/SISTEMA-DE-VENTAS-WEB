@@ -1,14 +1,20 @@
-import { useLocation, matchPath, useNavigate } from "react-router-dom";
-import { FaHome, FaBoxOpen, FaFileInvoice, FaCreditCard, FaTags, FaUserCircle } from "react-icons/fa";
+import { useLocation, matchPath } from "react-router-dom";
+import {
+  FaHome,
+  FaBoxOpen,
+  FaFileInvoice,
+  FaCreditCard,
+  FaTags,
+  FaUserCircle
+} from "react-icons/fa";
 import { useAuth } from "../auth/AuthContext";
-// importa tu contexto
 
 export default function Navbar() {
   const location = useLocation();
-  const navigate = useNavigate();
-  const { logout } = useAuth(); // accede a la función logout del contexto
+  const { logout, user, loading } = useAuth();
 
-  // Lista de rutas con sus datos
+  if (loading) return null;
+
   const routes = [
     { path: "/", name: "HOME", icon: <FaHome className="w-10 h-10 text-white ml-15" /> },
     { path: "/admin", name: "HOME", icon: <FaHome className="w-10 h-10 text-white ml-15" /> },
@@ -24,13 +30,14 @@ export default function Navbar() {
     { path: "/atm/create", name: "CREAR CAJERO", icon: <FaTags className="w-10 h-10 text-white ml-15" /> },
   ];
 
-  // Buscar la ruta que coincida con la actual
   const matchedRoute =
-    routes.find(route => matchPath(route.path, location.pathname)) ||
-    { name: "welcome", icon: <FaUserCircle className="w-10 h-10 text-white ml-15" /> };
+    routes.find(route => matchPath(route.path, location.pathname)) || {
+      name: user?.fullName || "Usuario",
+      icon: <FaUserCircle className="w-10 h-10 text-white ml-15" />
+    };
 
   const handleLogout = () => {
-    logout(); // Limpia el estado del usuario y redirige al login
+    logout();
   };
 
   return (

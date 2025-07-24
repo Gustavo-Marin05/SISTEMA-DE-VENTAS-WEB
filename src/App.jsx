@@ -12,7 +12,8 @@ import AtmPage from "./atm/AtmPage";
 import CustomerPage from "./customer/CustomerPage";
 import AtmForm from "./atm/components/AtmForm";
 import CustomerFacturas from "./customer/components/CustomerFacturas";
-
+import UserLayout from "./HomeUser/UserLayaut";
+import Table from "./HomeUser/Table";
 
 function App() {
   return (
@@ -29,41 +30,46 @@ function App() {
         <Route element={<ProtectedRoute requiredRole="ADMIN" />}>
           <Route element={<SidebarLayout />}>
             <Route path="/admin" element={<AdminHome />} />
-            <Route path="/category" element={<CaategoryPage/>}/>
-            <Route path="/category/create" element={<CategoryForm modo="crear"/>}/>
-            <Route path="/category/update/:id" element={<CategoryForm modo="editar"/>}/>
+            <Route path="/category" element={<CaategoryPage />} />
+            <Route
+              path="/category/create"
+              element={<CategoryForm modo="crear" />}
+            />
+            <Route
+              path="/category/update/:id"
+              element={<CategoryForm modo="editar" />}
+            />
 
             {/* seccion para las rutas de los productos */}
-            <Route path="/products" element={<ProductPage/>}/>
-            <Route path="/products/create" element={<ProductForm modo="crear"/>}/>
-            <Route path="/products/edit/:id" element={<ProductForm  modo="editar"/>} />
-
-
-
+            <Route path="/products" element={<ProductPage />} />
+            <Route
+              path="/products/create"
+              element={<ProductForm modo="crear" />}
+            />
+            <Route
+              path="/products/edit/:id"
+              element={<ProductForm modo="editar" />}
+            />
 
             {/* seccon para las rutas del atm */}
-            <Route path="/atm" element={<AtmPage/>}/>
-            <Route path="/atm/create" element={<AtmForm modo="crear"/>}/>
-            <Route path="/atm/edit/:id" element={<AtmForm  modo="editar"/>} />
-
-
-
-
+            <Route path="/atm" element={<AtmPage />} />
+            <Route path="/atm/create" element={<AtmForm modo="crear" />} />
+            <Route path="/atm/edit/:id" element={<AtmForm modo="editar" />} />
 
             {/* seccion para los clentes */}
-            <Route path="/customer" element={<CustomerPage/>}/>
-            <Route path="/customer/facturas/:id" element={<CustomerFacturas/>}/>
-
-
-
-
-
+            <Route path="/customer" element={<CustomerPage />} />
+            <Route
+              path="/customer/facturas/:id"
+              element={<CustomerFacturas />}
+            />
           </Route>
         </Route>
 
         {/* Rutas solo para USER */}
         <Route element={<ProtectedRoute requiredRole="USER" />}>
-          {/* Aquí irían las rutas de USER */}
+          <Route path="/user" element={<UserLayout />}>
+            <Route index element={<Table />} />
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>

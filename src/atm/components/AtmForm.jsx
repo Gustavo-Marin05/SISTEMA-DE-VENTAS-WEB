@@ -48,22 +48,24 @@ export default function AtmForm({ modo = "crear" }) {
 
   //esto me rederiza para los campos para que pueda editar
   useEffect(() => {
-    if (modo === "editar" && id) {
-      getAtmById(id)
-        .then((res) => {
-          const { fullname, ci, email } = res.data;
-          setFormData({
-            fullName,
-            ci,
-            email,
-            password
-          });
-        })
-        .catch((err) => {
-          console.error("Error al obtener productos:", err);
+  if (modo === "editar" && id) {
+    getAtmById(id)
+      .then((res) => {
+        // Corregir nombres aquí, usaste 'fullname' pero el estado es 'fullName'
+        const { fullName, ci, email } = res.data;
+        setFormData({
+          fullName,
+          ci,
+          email,
+          password: "",  // Vaciar password para no mostrarla
         });
-    }
-  },[modo,id]);
+      })
+      .catch((err) => {
+        console.error("Error al obtener usuario:", err);
+      });
+  }
+}, [modo, id]);
+
 
   return (
     <div className="flex items-center justify-center px-4">
