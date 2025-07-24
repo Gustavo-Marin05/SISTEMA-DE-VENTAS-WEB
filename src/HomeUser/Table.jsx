@@ -137,7 +137,7 @@ export default function Table() {
   const handlePrintInvoice = () => {
     if (invoiceId) {
       window.open(
-        `http://localhost:4000/api/invoice/${invoiceId}/pdf`,
+        `http://localhost:3000/invoice/${invoiceId}/pdf`,
         "_blank"
       );
       setShowModal(false);
