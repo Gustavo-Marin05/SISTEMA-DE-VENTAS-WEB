@@ -4,7 +4,6 @@ import RegisterPage from "./auth/RegisterPage";
 import ProtectedRoute from "./auth/ProtectedRoute";
 import SidebarLayout from "./components/SidebarLayout";
 import AdminHome from "./home/AdminHome";
-import CaategoryPage from "./category/categoryPage";
 import CategoryForm from "./category/components/CategoryForm";
 import ProductPage from "./product/ProductPage";
 import ProductForm from "./product/components/ProductForm";
@@ -14,6 +13,7 @@ import AtmForm from "./atm/components/AtmForm";
 import CustomerFacturas from "./customer/components/CustomerFacturas";
 import UserLayout from "./HomeUser/UserLayaut";
 import Table from "./HomeUser/Table";
+import CategoryPage from "./category/CategoryPage";
 
 function App() {
   return (
@@ -30,7 +30,7 @@ function App() {
         <Route element={<ProtectedRoute requiredRole="ADMIN" />}>
           <Route element={<SidebarLayout />}>
             <Route path="/admin" element={<AdminHome />} />
-            <Route path="/category" element={<CaategoryPage />} />
+            <Route path="/category" element={<CategoryPage />} />
             <Route
               path="/category/create"
               element={<CategoryForm modo="crear" />}
