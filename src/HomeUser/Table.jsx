@@ -8,9 +8,10 @@ export default function Table() {
   const [formData, setFormData] = useState({
     customerCi: "",
     customerFullName: "",
-    products: [{ productId: "", quantity: "", unitPrice: 0 }],
+    products: [],
   });
 
+  const [search, setSearch] = useState("");
   const [customerFound, setCustomerFound] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
@@ -43,7 +44,6 @@ export default function Table() {
 
   const handleCustomerCiBlur = async () => {
     if (!formData.customerCi) return;
-
     try {
       const res = await getCustomerByCi(formData.customerCi);
       setFormData({
@@ -51,43 +51,40 @@ export default function Table() {
         customerFullName: res.data.fullName,
       });
       setCustomerFound(true);
-    } catch (error) {
-      console.log("Cliente no encontrado, puedes registrarlo");
+    } catch {
       setFormData({ ...formData, customerFullName: "" });
       setCustomerFound(false);
     }
   };
 
-  const handleProductChange = (index, e) => {
-    const updatedProducts = [...formData.products];
-    const name = e.target.name;
-    let value = e.target.value;
-
-    if (name === "productId") {
-      value = parseInt(value); // Convertir a número entero
-      updatedProducts[index][name] = value;
-
-      const selectedProduct = products.find((p) => p.id === value);
-      updatedProducts[index].unitPrice = selectedProduct
-        ? selectedProduct.price
-        : 0;
-    } else if (name === "quantity") {
-      updatedProducts[index][name] = value;
-    } else {
-      updatedProducts[index][name] = value;
+  const handleSearchEnter = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      const found = products.find(
+        (p) => p.name.toLowerCase() === search.toLowerCase()
+      );
+      if (found) {
+        setFormData((prev) => ({
+          ...prev,
+          products: [
+            ...prev.products,
+            {
+              productId: found.id,
+              name: found.name,
+              quantity: 1,
+              unitPrice: found.price,
+            },
+          ],
+        }));
+        setSearch("");
+      }
     }
-
-    setFormData({ ...formData, products: updatedProducts });
   };
 
-  const addProduct = () => {
-    setFormData({
-      ...formData,
-      products: [
-        ...formData.products,
-        { productId: "", quantity: "", unitPrice: 0 },
-      ],
-    });
+  const handleQuantityChange = (index, value) => {
+    const updatedProducts = [...formData.products];
+    updatedProducts[index].quantity = value;
+    setFormData({ ...formData, products: updatedProducts });
   };
 
   const removeProduct = (index) => {
@@ -110,20 +107,15 @@ export default function Table() {
       };
 
       const response = await createInvoice(payload);
-
-      // Guardar ID y número de factura para imprimir
       setInvoiceId(response.data.id);
       setInvoiceNumber(response.data.number);
       setSuccess("Factura creada correctamente");
-
-      // Mostrar el modal
       setShowModal(true);
 
-      // Limpiar formulario
       setFormData({
         customerCi: "",
         customerFullName: "",
-        products: [{ productId: "", quantity: "", unitPrice: 0 }],
+        products: [],
       });
     } catch (error) {
       console.error(
@@ -154,87 +146,109 @@ export default function Table() {
           Crear Factura
         </h2>
 
-        <label className="block mb-2 text-white">C.I. Cliente</label>
-        <input
-          type="text"
-          name="customerCi"
-          value={formData.customerCi}
-          onChange={handleInputChange}
-          onBlur={handleCustomerCiBlur}
-          className="bg-[#263556] border border-[#2E3A4B] px-2 py-1 mb-4 w-full text-white"
-          required
-        />
-
-        <label className="block mb-2 text-white">Nombre del cliente</label>
-        <input
-          type="text"
-          name="customerFullName"
-          value={formData.customerFullName}
-          onChange={handleInputChange}
-          readOnly={customerFound}
-          className={`px-2 py-1 mb-4 w-full ${
-            customerFound ? "bg-gray-500" : "bg-[#263556]"
-          } border border-[#2E3A4B] text-white`}
-          required
-        />
-
-        <h1 className="text-lg font-semibold mb-2">Sección del producto</h1>
-        {formData.products.map((prod, index) => (
-          <div
-            key={index}
-            className="mb-4 grid grid-cols-4 gap-4 items-center text-white"
-          >
-            <select
-              name="productId"
-              value={prod.productId}
-              onChange={(e) => handleProductChange(index, e)}
-              className="bg-[#263556] border border-[#2E3A4B] px-2 py-1 text-white"
-              required
-            >
-              <option value="">Seleccionar producto</option>
-              {products.map((p) => (
-                <option key={p.id} value={p.id}>
-                  {p.name}
-                </option>
-              ))}
-            </select>
-
-            <input
-              type="number"
-              name="quantity"
-              min="1"
-              value={prod.quantity}
-              onChange={(e) => handleProductChange(index, e)}
-              className="bg-[#263556] border border-[#2E3A4B] px-2 py-1 text-white"
-              required
-            />
-
+        {/* Cliente */}
+        <div className="grid grid-cols-2 gap-4 mb-4">
+          <div>
+            <label className="block mb-2 text-white">C.I. Cliente</label>
             <input
               type="text"
-              readOnly
-              value={`Bs ${prod.unitPrice.toFixed(2)}`}
-              className="bg-[#2E3A4B] px-2 py-1 border border-[#2E3A4B] text-white"
+              name="customerCi"
+              value={formData.customerCi}
+              onChange={handleInputChange}
+              onBlur={handleCustomerCiBlur}
+              className="bg-[#263556] border border-[#2E3A4B] px-2 py-1 w-full text-white"
+              required
             />
-
-            {index > 0 && (
-              <button
-                type="button"
-                onClick={() => removeProduct(index)}
-                className="text-red-400 font-bold"
-              >
-                X
-              </button>
-            )}
           </div>
-        ))}
+          <div>
+            <label className="block mb-2 text-white">Nombre del cliente</label>
+            <input
+              type="text"
+              name="customerFullName"
+              value={formData.customerFullName}
+              onChange={handleInputChange}
+              readOnly={customerFound}
+              className={`px-2 py-1 w-full ${
+                customerFound ? "bg-gray-500" : "bg-[#263556]"
+              } border border-[#2E3A4B] text-white`}
+              required
+            />
+          </div>
+        </div>
 
-        <button
-          type="button"
-          onClick={addProduct}
-          className="mb-4 text-[#00BFFF] underline"
-        >
-          + Agregar producto
-        </button>
+        {/* Buscador único */}
+        <div className="mb-4 relative">
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            onKeyDown={handleSearchEnter}
+            placeholder="Buscar producto y presionar Enter..."
+            className="bg-[#263556] border border-[#2E3A4B] px-2 py-1 w-full text-white"
+          />
+          {search && (
+            <ul className="absolute z-10 bg-white text-black border border-gray-300 mt-1 rounded shadow-lg max-h-32 overflow-y-auto w-full">
+              {products
+                .filter((p) =>
+                  p.name.toLowerCase().includes(search.toLowerCase())
+                )
+                .map((p) => (
+                  <li
+                    key={p.id}
+                    onClick={() => {
+                      setFormData((prev) => ({
+                        ...prev,
+                        products: [
+                          ...prev.products,
+                          {
+                            productId: p.id,
+                            name: p.name,
+                            quantity: 1,
+                            unitPrice: p.price,
+                          },
+                        ],
+                      }));
+                      setSearch("");
+                    }}
+                    className="px-2 py-1 hover:bg-gray-200 cursor-pointer"
+                  >
+                    {p.name} - Bs {p.price.toFixed(2)}
+                  </li>
+                ))}
+            </ul>
+          )}
+        </div>
+
+        {/* Lista de productos agregados */}
+        {formData.products.length > 0 && (
+          <div className="mb-4">
+            {formData.products.map((prod, index) => (
+              <div
+                key={index}
+                className="grid grid-cols-4 gap-4 items-center mb-2"
+              >
+                <span>{prod.name}</span>
+                <input
+                  type="number"
+                  min="1"
+                  value={prod.quantity}
+                  onChange={(e) =>
+                    handleQuantityChange(index, e.target.value)
+                  }
+                  className="bg-[#263556] border border-[#2E3A4B] px-2 py-1 text-white"
+                />
+                <span>Bs {(prod.unitPrice * prod.quantity).toFixed(2)}</span>
+                <button
+                  type="button"
+                  onClick={() => removeProduct(index)}
+                  className="text-red-400 font-bold"
+                >
+                  X
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
 
         <div className="mb-4 font-semibold text-lg text-white">
           Total: <span className="text-green-400">Bs {total.toFixed(2)}</span>
@@ -251,7 +265,6 @@ export default function Table() {
         </button>
       </form>
 
-      {/* Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
           <div className="bg-white text-black p-6 rounded-lg shadow-lg text-center">
