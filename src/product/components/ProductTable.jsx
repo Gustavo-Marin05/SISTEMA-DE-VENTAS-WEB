@@ -56,7 +56,7 @@ export default function TableProduct() {
                 <th className="px-4 py-2 text-left text-white">PRECIO</th>
                 <th className="px-4 py-2 text-left text-white">CATEGORIA</th>
                 <th className="px-4 py-2 rounded-tr-lg text-white">
-                  OPERACIOBES
+                  OPERACIONES
                 </th>
               </tr>
             </thead>

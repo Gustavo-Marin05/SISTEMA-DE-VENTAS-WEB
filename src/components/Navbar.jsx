@@ -5,11 +5,12 @@ import {
   FaFileInvoice,
   FaCreditCard,
   FaTags,
-  FaUserCircle
+  FaUserCircle,
+  FaBars
 } from "react-icons/fa";
 import { useAuth } from "../auth/AuthContext";
 
-export default function Navbar() {
+export default function Navbar({ onToggleSidebar }) {
   const location = useLocation();
   const { logout, user, loading } = useAuth();
 
@@ -22,12 +23,6 @@ export default function Navbar() {
     { path: "/category", name: "CATEGORIAS", icon: <FaTags className="w-10 h-10 text-white ml-15" /> },
     { path: "/customer", name: "CLIENTES", icon: <FaFileInvoice className="w-10 h-10 text-white ml-15" /> },
     { path: "/atm", name: "CAJEROS", icon: <FaCreditCard className="w-10 h-10 text-white ml-15" /> },
-    { path: "/products/create", name: "CREAR PRODUCTO", icon: <FaBoxOpen className="w-10 h-10 text-white ml-15" /> },
-    { path: "/products/edit/:id", name: "EDITAR PRODUCTO", icon: <FaBoxOpen className="w-10 h-10 text-white ml-15" /> },
-    { path: "/category/create", name: "CREAR CATEGORIA", icon: <FaTags className="w-10 h-10 text-white ml-15" /> },
-    { path: "/category/edit/:id", name: "EDITAR CATEGORIA", icon: <FaTags className="w-10 h-10 text-white ml-15" /> },
-    { path: "/atm/edit/:id", name: "EDITAR CAJERO", icon: <FaCreditCard className="w-10 h-10 text-white ml-15" /> },
-    { path: "/atm/create", name: "CREAR CAJERO", icon: <FaTags className="w-10 h-10 text-white ml-15" /> },
   ];
 
   const matchedRoute =
@@ -36,19 +31,19 @@ export default function Navbar() {
       icon: <FaUserCircle className="w-10 h-10 text-white ml-15" />
     };
 
-  const handleLogout = () => {
-    logout();
-  };
-
   return (
     <header className="bg-[#28395e] p-2.5 shadow-md flex items-center justify-between">
       <div className="flex items-center gap-2">
+        {/* Botón hamburguesa solo en móvil */}
+        <button className="md:hidden text-white" onClick={onToggleSidebar}>
+          <FaBars size={28} />
+        </button>
         {matchedRoute.icon}
         <span className="text-white font-bold text-lg">{matchedRoute.name}</span>
       </div>
 
       <button
-        onClick={handleLogout}
+        onClick={logout}
         className="bg-[#0C1320] hover:border text-white font-semibold py-2 px-4 rounded mr-5"
       >
         Logout

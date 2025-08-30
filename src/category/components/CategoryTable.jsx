@@ -38,12 +38,12 @@ export default function TableCategory() {
             <thead className="bg-[#1A2438]">
               <tr>
                 <th className="px-4 py-2 rounded-tl-lg text-left text-white">
-                  NAME CATEGORY
+                  CATEGORIA
                 </th>
                 <th className="px-4 py-2 text-left text-white">
-                  CANT. PRODUCT
+                  CANT. PRODUCTOS
                 </th>
-                <th className="px-4 py-2 text-left text-white">OPERATIONS</th>
+                <th className="px-4 py-2 text-left text-white">OPERACIONES</th>
               </tr>
             </thead>
 
