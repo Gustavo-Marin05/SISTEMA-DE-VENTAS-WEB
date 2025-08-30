@@ -41,10 +41,10 @@ export default function TableProduct() {
 
   return (
     <div className="flex justify-center px-2">
-      <div className="bg-[#263556] p-4 md:p-5 rounded w-full overflow-hidden">
-        {/* Scroll horizontal para tablas grandes */}
+      <div className="bg-[#263556] p-4 md:p-5 rounded w-full max-w-full overflow-hidden">
+        {/* Contenedor con scroll horizontal solo si es necesario */}
         <div className="overflow-x-auto">
-          <table className="min-w-full border-separate border-spacing-0 rounded-lg overflow-hidden text-sm md:text-base">
+          <table className="w-full md:min-w-[900px] table-auto border-separate border-spacing-0 rounded-lg overflow-hidden text-sm md:text-base">
             <thead className="bg-[#1A2438]">
               <tr>
                 <th className="px-2 md:px-4 py-2 rounded-tl-lg text-left text-white">
@@ -74,7 +74,7 @@ export default function TableProduct() {
                   <td className="px-2 md:px-4 py-2">
                     {product.category?.name}
                   </td>
-                  <td className="px-2 md:px-4 py-2 flex gap-2">
+                  <td className="px-2 md:px-4 py-2 flex gap-2 justify-center">
                     <button
                       className="bg-red-500 text-white px-2 md:px-4 py-1 rounded hover:bg-red-600"
                       onClick={() => handleDeleteProduct(product.id)}

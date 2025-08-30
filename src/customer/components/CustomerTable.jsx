@@ -24,9 +24,9 @@ export default function CustomerTable() {
   return (
     <div className="flex justify-center px-2">
       <div className="bg-[#263556] p-4 md:p-5 rounded w-full max-w-full overflow-hidden">
-        {/* Scroll horizontal para tablas grandes */}
+        {/* Contenedor con scroll horizontal solo si es necesario */}
         <div className="overflow-x-auto">
-          <table className="min-w-full border-separate border-spacing-0 rounded-lg overflow-hidden text-sm md:text-base">
+          <table className="w-full md:min-w-[800px] table-auto border-separate border-spacing-0 rounded-lg text-sm md:text-base">
             <thead className="bg-[#1A2438]">
               <tr>
                 <th className="px-2 md:px-4 py-2 text-left text-white rounded-tl-lg">
@@ -38,7 +38,6 @@ export default function CustomerTable() {
                 </th>
               </tr>
             </thead>
-
             <tbody className="bg-[#2E3A4B] text-white">
               {customers.map((customer) => (
                 <tr key={customer.id}>

@@ -11,23 +11,29 @@ export default function SidebarLayout() {
   const isAdmin = user?.role === "ADMIN";
 
   return (
-    <div className="flex min-h-screen overflow-hidden">
-      {/* Sidebar debajo del navbar */}
+    <div className="flex flex-col md:flex-row min-h-screen overflow-hidden">
+      {/* Sidebar */}
       {isAdmin && (
-        <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+        <Sidebar
+          isOpen={sidebarOpen}
+          onClose={() => setSidebarOpen(false)}
+        />
       )}
 
       {/* Contenedor principal */}
-      <div className="flex-1 flex flex-col">
-        {/* Navbar fijo por encima */}
+      <div className="flex-1 flex flex-col items-center">
+        {/* Navbar fijo */}
         <div className="fixed top-0 left-0 right-0 z-50">
           <Navbar onToggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
         </div>
 
-        {/* Contenido principal con scroll */}
-        <main className="flex-1 pt-20 h-screen overflow-x-auto overflow-y-auto">
-          <div className="min-w-[500px] w-max px-4 lg:px-8">
-            <Outlet />
+        {/* Contenido principal */}
+        <main className="flex-1 pt-20 h-screen overflow-x-auto overflow-y-auto w-full">
+          {/* Contenedor centrado */}
+          <div className="flex justify-center w-full">
+            <div className="w-full md:w-max px-2 md:px-4 lg:px-8">
+              <Outlet />
+            </div>
           </div>
         </main>
       </div>
