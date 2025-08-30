@@ -25,8 +25,8 @@ export default function SidebarLayout() {
         </div>
 
         {/* Contenido principal con scroll */}
-        <main className="flex-1 pt-20 overflow-x-auto">
-          <div className="p-5 mx-auto">
+        <main className="flex-1 pt-20 h-screen overflow-x-auto overflow-y-auto">
+          <div className="min-w-[500px] w-max px-4 lg:px-8">
             <Outlet />
           </div>
         </main>
