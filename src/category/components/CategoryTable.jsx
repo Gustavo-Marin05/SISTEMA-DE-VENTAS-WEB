@@ -31,41 +31,46 @@ export default function TableCategory() {
   };
 
   return (
-    <div className="flex justify-center">
-      <div className="bg-[#263556] p-5 rounded max-w-3xl w-full overflow-hidden">
-        <div className="overflow-auto max-h-96">
-          <table className="min-w-full border-separate border-spacing-0 rounded-lg overflow-hidden">
+    <div className="flex justify-center px-2">
+      <div className="bg-[#263556] p-4 md:p-5 rounded w-full max-w-full overflow-hidden">
+        {/* Scroll horizontal para tablas grandes */}
+        <div className="overflow-x-auto">
+          <table className="min-w-full border-separate border-spacing-0 rounded-lg overflow-hidden text-sm md:text-base">
             <thead className="bg-[#1A2438]">
               <tr>
-                <th className="px-4 py-2 rounded-tl-lg text-left text-white">
+                <th className="px-2 md:px-4 py-2 rounded-tl-lg text-left text-white">
                   CATEGORIA
                 </th>
-                <th className="px-4 py-2 text-left text-white">
+                <th className="px-2 md:px-4 py-2 text-left text-white">
                   CANT. PRODUCTOS
                 </th>
-                <th className="px-4 py-2 text-left text-white">OPERACIONES</th>
+                <th className="px-2 md:px-4 py-2 text-left text-white">
+                  OPERACIONES
+                </th>
               </tr>
             </thead>
 
-            <tbody className="text-white text-center bg-[#2E3A4B]">
+            <tbody className="bg-[#2E3A4B] text-white text-center">
               {categories.map((category) => (
                 <tr key={category.id}>
-                  <td className="px-4 py-2">{category.name}</td>
-                  <td className="px-4 py-2">
+                  <td className="px-2 md:px-4 py-2">{category.name}</td>
+                  <td className="px-2 md:px-4 py-2">
                     {category.Product?.length || 0}
                   </td>
-                  <td className="px-4 py-2">
+                  <td className="px-2 md:px-4 py-2 flex gap-2 justify-center">
                     <button
-                      className="bg-red-500 text-white px-4 py-1 rounded mr-2 hover:bg-red-600"
+                      className="bg-red-500 text-white px-2 md:px-4 py-1 rounded hover:bg-red-600"
                       onClick={() => handledeleteCategory(category.id)}
                     >
-                      <FaTrash/>
+                      <FaTrash />
                     </button>
                     <button
-                      className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600"
-                      onClick={() => navigate(`/category/update/${category.id}`)}
+                      className="bg-blue-500 text-white px-2 md:px-4 py-1 rounded hover:bg-blue-600"
+                      onClick={() =>
+                        navigate(`/category/update/${category.id}`)
+                      }
                     >
-                      <FaEdit/>
+                      <FaEdit />
                     </button>
                   </td>
                 </tr>
@@ -73,12 +78,14 @@ export default function TableCategory() {
             </tbody>
           </table>
         </div>
-        <div className="flex justify-center mt-6">
+
+        {/* Botón crear categoría */}
+        <div className="flex justify-center mt-4 md:mt-6">
           <button
-            className="bg-amber-400 text-white px-4 py-1 rounded mr-2 hover:border"
+            className="bg-amber-400 text-white px-4 py-1 rounded hover:border"
             onClick={handleCreateCategory}
           >
-            new Category
+            New Category
           </button>
         </div>
       </div>

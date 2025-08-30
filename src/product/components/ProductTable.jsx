@@ -7,13 +7,10 @@ export default function TableProduct() {
   //estados para los productos
   const [products, setProducts] = useState([]);
   const navigate = useNavigate();
-  
 
   const handleCreateProduct = () => {
     navigate("/products/create");
   };
-
-  
 
   //el efecto para los productos
 
@@ -43,19 +40,26 @@ export default function TableProduct() {
   };
 
   return (
-    <div className="flex justify-center">
-      <div className="bg-[#263556] p-5 rounded max-w-3xl w-full overflow-hidden">
-        <div className="overflow-auto max-h-96">
-          <table className="min-w-full border-separate border-spacing-0 rounded-lg overflow-hidden">
+    <div className="flex justify-center px-2">
+      <div className="bg-[#263556] p-4 md:p-5 rounded w-full overflow-hidden">
+        {/* Scroll horizontal para tablas grandes */}
+        <div className="overflow-x-auto">
+          <table className="min-w-full border-separate border-spacing-0 rounded-lg overflow-hidden text-sm md:text-base">
             <thead className="bg-[#1A2438]">
               <tr>
-                <th className="px-4 py-2 rounded-tl-lg text-left text-white">
+                <th className="px-2 md:px-4 py-2 rounded-tl-lg text-left text-white">
                   PRODUCTOS
                 </th>
-                <th className="px-4 py-2 text-left text-white">CANTIDAD</th>
-                <th className="px-4 py-2 text-left text-white">PRECIO</th>
-                <th className="px-4 py-2 text-left text-white">CATEGORIA</th>
-                <th className="px-4 py-2 rounded-tr-lg text-white">
+                <th className="px-2 md:px-4 py-2 text-left text-white">
+                  CANTIDAD
+                </th>
+                <th className="px-2 md:px-4 py-2 text-left text-white">
+                  PRECIO
+                </th>
+                <th className="px-2 md:px-4 py-2 text-left text-white">
+                  CATEGORIA
+                </th>
+                <th className="px-2 md:px-4 py-2 rounded-tr-lg text-white">
                   OPERACIONES
                 </th>
               </tr>
@@ -64,20 +68,24 @@ export default function TableProduct() {
             <tbody className="bg-[#2E3A4B] text-white">
               {products.map((product) => (
                 <tr key={product.id}>
-                  <td className="px-4 py-2">{product.name}</td>
-                  <td className="px-4 py-2">{product.stock}</td>
-                  <td className="px-4 py-2">{product.price}</td>
-                  <td className="px-4 py-2">{product.category?.name}</td>
-                  <td className="px-4 py-2">
-                    <button className="bg-red-500 text-white px-4 py-1 rounded mr-2 hover:bg-red-600"
-                    onClick={() => handleDeleteProduct(product.id)}>
-                     <FaTrash/>
+                  <td className="px-2 md:px-4 py-2">{product.name}</td>
+                  <td className="px-2 md:px-4 py-2">{product.stock}</td>
+                  <td className="px-2 md:px-4 py-2">{product.price}</td>
+                  <td className="px-2 md:px-4 py-2">
+                    {product.category?.name}
+                  </td>
+                  <td className="px-2 md:px-4 py-2 flex gap-2">
+                    <button
+                      className="bg-red-500 text-white px-2 md:px-4 py-1 rounded hover:bg-red-600"
+                      onClick={() => handleDeleteProduct(product.id)}
+                    >
+                      <FaTrash />
                     </button>
                     <button
                       onClick={() => navigate(`/products/edit/${product.id}`)}
-                      className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600"
+                      className="bg-blue-500 text-white px-2 md:px-4 py-1 rounded hover:bg-blue-600"
                     >
-                      <FaEdit/>
+                      <FaEdit />
                     </button>
                   </td>
                 </tr>
@@ -85,12 +93,14 @@ export default function TableProduct() {
             </tbody>
           </table>
         </div>
-        <div className="flex justify-center mt-6">
+
+        {/* Botón de crear producto */}
+        <div className="flex justify-center mt-4 md:mt-6">
           <button
             onClick={handleCreateProduct}
-            className="bg-amber-400 text-white px-4 py-1 rounded mr-2 hover:border"
+            className="bg-amber-400 text-white px-4 py-1 rounded hover:border"
           >
-            new product
+            New Product
           </button>
         </div>
       </div>

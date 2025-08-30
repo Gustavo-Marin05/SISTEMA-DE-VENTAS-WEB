@@ -11,22 +11,22 @@ export default function SidebarLayout() {
   const isAdmin = user?.role === "ADMIN";
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen overflow-hidden">
+      {/* Sidebar debajo del navbar */}
       {isAdmin && (
         <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       )}
 
-      <div className="fixed top-0 left-0 md:left-64 right-0 z-50">
-        <div
-          className={`fixed top-0 right-0 z-50 bg-[#1A2438] transition-all ${
-            isAdmin ? "md:left-64 left-0" : "left-0"
-          }`}
-        >
+      {/* Contenedor principal */}
+      <div className="flex-1 flex flex-col">
+        {/* Navbar fijo por encima */}
+        <div className="fixed top-0 left-0 right-0 z-50">
           <Navbar onToggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
         </div>
 
-        <main className="flex-1 pt-20 px-4 lg:px-8">
-          <div className="max-w-6xl mx-auto w-full">
+        {/* Contenido principal con scroll */}
+        <main className="flex-1 pt-20 overflow-x-auto">
+          <div className="p-5 mx-auto">
             <Outlet />
           </div>
         </main>

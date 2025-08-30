@@ -22,28 +22,31 @@ export default function CustomerTable() {
   };
 
   return (
-    <div className="flex justify-center">
-      <div className="bg-[#263556] p-5 rounded max-w-3xl w-full overflow-hidden">
-        <div className="overflow-auto max-h-96">
-          <table className="min-w-full border-separate border-spacing-0 rounded-lg overflow-hidden">
+    <div className="flex justify-center px-2">
+      <div className="bg-[#263556] p-4 md:p-5 rounded w-full max-w-full overflow-hidden">
+        {/* Scroll horizontal para tablas grandes */}
+        <div className="overflow-x-auto">
+          <table className="min-w-full border-separate border-spacing-0 rounded-lg overflow-hidden text-sm md:text-base">
             <thead className="bg-[#1A2438]">
               <tr>
-                <th className="px-4 py-2 text-left text-white rounded-tl-lg">
+                <th className="px-2 md:px-4 py-2 text-left text-white rounded-tl-lg">
                   NOMBRE
                 </th>
-                <th className="px-4 py-2 text-left text-white">CI</th>
-                <th className="px-4 py-2 text-left text-white">FACTURAS</th>
+                <th className="px-2 md:px-4 py-2 text-left text-white">CI</th>
+                <th className="px-2 md:px-4 py-2 text-left text-white">
+                  FACTURAS
+                </th>
               </tr>
             </thead>
 
-            <tbody className="text-white bg-[#2E3A4B]">
+            <tbody className="bg-[#2E3A4B] text-white">
               {customers.map((customer) => (
                 <tr key={customer.id}>
-                  <td className="px-4 py-2">{customer.fullName}</td>
-                  <td className="px-4 py-2">{customer.ci}</td>
-                  <td className="px-4 py-2">
+                  <td className="px-2 md:px-4 py-2">{customer.fullName}</td>
+                  <td className="px-2 md:px-4 py-2">{customer.ci}</td>
+                  <td className="px-2 md:px-4 py-2 flex justify-center">
                     <button
-                      className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600"
+                      className="bg-blue-500 text-white px-2 md:px-4 py-1 rounded hover:bg-blue-600"
                       onClick={() =>
                         navigate(`/customer/facturas/${customer.id}`)
                       }
@@ -55,6 +58,16 @@ export default function CustomerTable() {
               ))}
             </tbody>
           </table>
+        </div>
+
+        {/* Botón crear cliente */}
+        <div className="flex justify-center mt-4 md:mt-6">
+          <button
+            className="bg-amber-400 text-white px-4 py-1 rounded hover:border"
+            onClick={() => navigate("/customer/create")}
+          >
+            New Customer
+          </button>
         </div>
       </div>
     </div>
